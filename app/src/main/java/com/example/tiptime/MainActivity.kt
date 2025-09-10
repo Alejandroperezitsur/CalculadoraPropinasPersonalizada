@@ -16,8 +16,6 @@
 package com.example.tiptime
 
 import android.os.Bundle
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,7 +31,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -76,16 +76,16 @@ class MainActivity : ComponentActivity() {
 fun TipTimeLayout() {
     var amountInput by remember { mutableStateOf("") }
     var tipInput by remember { mutableStateOf("") }
-    var roundUp by remember { mutableStateOf(false) }
-
     val amount = amountInput.toDoubleOrNull() ?: 0.0
     val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
 
+    var roundUp by remember { mutableStateOf(false) }
+
     val tip = calculateTip(amount, tipPercent, roundUp)
     Column(
-        modifier = Modifier
-            .padding(40.dp)
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.
+        padding(40.dp).
+        verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -97,26 +97,26 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,
-            leadingIcon = R.drawable.money, // Assuming you have a drawable named money
+            leadingIcon = R.drawable.money,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
             value = amountInput,
-            onValueChange = { amountInput = it }, // Corrected parameter name
+            onValueChanged = { amountInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
         )
         EditNumberField(
             label = R.string.how_was_the_service,
-            leadingIcon = R.drawable.percent, // Assuming you have a drawable named percent, replace if needed
+            leadingIcon = R.drawable.percent,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
             value = tipInput,
-            onValueChange = { tipInput = it }, // Corrected parameter name
+            onValueChanged = { tipInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
@@ -133,42 +133,38 @@ fun TipTimeLayout() {
         Spacer(modifier = Modifier.height(150.dp))
     }
 }
-
 @Composable
 fun EditNumberField(
     @StringRes label: Int,
     @DrawableRes leadingIcon: Int,
     keyboardOptions: KeyboardOptions,
     value: String,
-    onValueChange: (String) -> Unit, // Corrected parameter name to onValueChange
-    modifier: Modifier = Modifier // Added default modifier
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier
 ) {
     TextField(
         value = value,
         leadingIcon = { Icon(painter = painterResource(id = leadingIcon), null) },
         singleLine = true,
         modifier = modifier,
-        onValueChange = onValueChange, // Ensured this matches the parameter
+        onValueChange = onValueChanged,
         label = { Text(stringResource(label)) },
         keyboardOptions = keyboardOptions
+
     )
 }
 
 @Composable
-fun RoundTheTipRow(
-    roundUp: Boolean,
-    onRoundUpChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier // Added default modifier
-) {
+fun RoundTheTipRow(roundUp: Boolean, onRoundUpChanged: (Boolean) -> Unit, modifier: Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .size(48.dp),
         verticalAlignment = Alignment.CenterVertically
-    ) {
+    ){
         Text(text = stringResource(R.string.round_up_tip))
         Switch(
-            modifier = Modifier // Removed redundant modifier parameter here
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.End),
             checked = roundUp,
